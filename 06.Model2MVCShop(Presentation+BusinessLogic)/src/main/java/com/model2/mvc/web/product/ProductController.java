@@ -100,6 +100,8 @@ public class ProductController {
 		}
 		search.setPageSize(pageSize);
 		
+		System.out.println(search);
+		
 		// Business logic ผ๖วเ
 		Map<String , Object> map=productService.getProductList(search);
 		

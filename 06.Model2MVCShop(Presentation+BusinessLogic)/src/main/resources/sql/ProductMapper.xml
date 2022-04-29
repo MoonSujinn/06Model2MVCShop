@@ -21,7 +21,7 @@
 	<insert 	id="addProduct"		parameterType="product" >
 	 	INSERT
 		INTO product( prod_no, prod_name, prod_detail, manufacture_day, price, image_file, reg_date) 
-		VALUES	 (	seq_product_prod_no.NEXTVAL , #{prodName} , #{prodDetail} , replace(#{manuDate:VARCHAR},'-',''), 
+		VALUES	 (	seq_product_prod_no.NEXTVAL , #{prodName} , #{prodDetail} , #{manuDate:VARCHAR} , 
 							#{price:NUMERIC} , #{fileName:VARCHAR}, SYSDATE )
 	 </insert>
 	 
@@ -49,20 +49,19 @@
 	<select  id="getProductList"  parameterType="search"	resultMap="productSelectMap">
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
-	  					FROM		(	SELECT prod_no , prod_name , price
-											FROM product
-											<if test="searchCondition != null">
-												<where>
+	  					FROM		(	SELECT p.prod_no, p.prod_name, p.price, p.reg_date, NVL(t.tran_status_code,0)
+											FROM product p, transaction t
+											WHERE t.prod_no(+) = p.prod_no
+											<if test="searchKeyword != ''">
 													<if test="searchCondition == 0 and searchKeyword !='' ">
-										 				prod_no = #{searchKeyword}
+										 				AND p.prod_no = #{searchKeyword}
 													</if>
 													<if test="searchCondition == 1 and searchKeyword !='' ">
-										 				prod_name = #{searchKeyword}
+										 				AND prod_name = #{searchKeyword}
 													</if>
 													<if test="searchCondition == 2 and searchKeyword !='' ">
-										 				price = #{searchKeyword}
-													</if>
-												</where>
+										 				AND price = #{searchKeyword}
+										 			</if>												
 											</if>
 											ORDER BY prod_no ) inner_table
 						WHERE ROWNUM &lt;= #{endRowNum} )
@@ -72,21 +71,19 @@
 	<!-- SQL : SELECT ROW Count -->	 
 	 <select  id="getTotalCount"  parameterType="search"	 resultType="int">
 	  	SELECT COUNT(*)
-	  	FROM(	SELECT prod_no , prod_name , price
+	  	FROM(	SELECT prod_no 
 						FROM product
 						<if test="searchCondition != null">
-							<where>
 								<if test="searchCondition == 0 and searchKeyword !='' ">
-						 			prod_no = #{searchKeyword}
+						 			AND p.prod_no = #{searchKeyword}
 								</if>
 								<if test="searchCondition == 1 and searchKeyword !='' ">
-						 		prod_name = #{searchKeyword}
+						 		AND prod_name = #{searchKeyword}
 								</if>
 								<if test="searchCondition == 2 and searchKeyword !='' ">
-						 		price = #{searchKeyword}
+						 		AND price = #{searchKeyword}
 								</if>
 
-							</where>
 						</if> ) countTable						
 	 </select>
 

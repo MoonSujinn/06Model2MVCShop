@@ -198,7 +198,29 @@
 			<td></td>
 			<td align="left">${product.regDate}</td>
 			<td></td>
-			<td align="left">${product.proTranCode}
+			<td align="left">
+			<c:if test= "${param.menu=='search'}" >
+				<c:if test= "${product.proTranCode.trim()=='0'}" >
+				 	판매중				
+				</c:if>
+				<c:if test="${product.proTranCode.trim()!='0'}">
+					재고없음
+				</c:if>
+			</c:if>
+			<c:if test= "${param.menu!='search'}" >
+				<c:if test="${product.proTranCode.trim()=='0'}">
+					판매중
+				</c:if>
+				<c:if test="${product.proTranCode.trim()=='1'}">
+					구매완료&nbsp;<a href="/updateTranCode.do?prodNo=${product.prodNo}&tranCode=2">배송하기</a>
+				</c:if>
+				<c:if test="${product.proTranCode.trim()=='2'}">
+					배송중
+				</c:if>
+				<c:if test="${product.proTranCode.trim()=='3'}">
+					배송완료
+				</c:if>
+			</c:if>			
 			</td>		
 		</tr>
 		<tr>

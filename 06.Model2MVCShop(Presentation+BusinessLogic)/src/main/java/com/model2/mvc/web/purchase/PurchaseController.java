@@ -22,6 +22,7 @@ import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.domain.Purchase;
 import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.purchase.PurchaseService;
+import com.model2.mvc.service.product.ProductService;
 
 
 //==> 회원관리 Controller
@@ -50,23 +51,29 @@ public class PurchaseController {
 	
 	
 	@RequestMapping("/addPurchaseView.do")
-	public String addPurchase( @ModelAttribute("purchase") Purchase purchase ) throws Exception {
+	public String addPurchase( @RequestParam("prodNo") int prodNo , Model model) throws Exception {
 
 		System.out.println("/addPurchase.do");
-		//Business Logic
-		purchaseService.addPurchase(purchase);
 		
-		return "redirect:/purchase/addPurchaseView.jsp";
+		Purchase purchase = purchaseService.getPurchase(prodNo);
+		
+		model.addAttribute("purchase", purchase);
+		
+		return "forward:/purchase/addPurchaseView.jsp";
 	}
 	
 	@RequestMapping("/addPurchase.do")
-	public String addPurchaseView( @RequestParam("tranNo") int tranNo , Model model ) throws Exception{
+	public String addPurchaseView(@RequestParam("prodNo") int prodNo, @ModelAttribute("purchase") Purchase purchase, HttpSession session) throws Exception{
 
-		System.out.println("/addPurchaseView.do");
-		//Business Logic
-		Purchase purchase = purchaseService.getPurchase(tranNo);
-		// Model 과 View 연결
-		model.addAttribute("purchase", purchase);
+		System.out.println("/addPurchase.do");
+		
+		User user = (User)session.getAttribute("user");
+		Product product = purchaseService.getPurchase(prodNo);
+		purchase.setPurchaseProd(product);
+		purchase.setBuyer(user);
+		
+		
+		purchaseService.addPurchase(purchase);
 		
 		return "forward:/purchase/addPurchase.jsp";
 	}

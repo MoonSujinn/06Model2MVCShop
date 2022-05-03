@@ -34,7 +34,10 @@ public class PurchaseController {
 	@Qualifier("purchaseServiceImpl")
 	private PurchaseService purchaseService;
 	//setter Method 구현 않음
-		
+	@Autowired
+	@Qualifier("productServiceImpl")
+	private ProductService productService;
+	
 	public PurchaseController(){
 		System.out.println(this.getClass());
 	}
@@ -55,9 +58,9 @@ public class PurchaseController {
 
 		System.out.println("/addPurchase.do");
 		
-		Purchase purchase = purchaseService.getPurchase(prodNo);
+		Product product = productService.getProduct(prodNo);
 		
-		model.addAttribute("purchase", purchase);
+		model.addAttribute("product", product);
 		
 		return "forward:/purchase/addPurchaseView.jsp";
 	}
@@ -68,7 +71,9 @@ public class PurchaseController {
 		System.out.println("/addPurchase.do");
 		
 		User user = (User)session.getAttribute("user");
-		Product product = purchaseService.getPurchase(prodNo);
+		System.out.println(user);
+		Product product = new Product();
+		product.setProdNo(prodNo);
 		purchase.setPurchaseProd(product);
 		purchase.setBuyer(user);
 		

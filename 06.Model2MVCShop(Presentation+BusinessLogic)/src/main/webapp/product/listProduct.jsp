@@ -58,7 +58,7 @@
 
 <div style="width:98%; margin-left:10px;">
 
-<form name="detailForm" action="/listProduct.do?menu=search" method="post">
+<form name="detailForm" action="/listProduct.do?menu=${param.menu}" method="post">
 
 <table width="100%" height="37" border="0" cellpadding="0"   cellspacing="0">
    <tr>

@@ -84,16 +84,14 @@
     </update>
     
     
-	<select  id="getPurchaseList"  parameterType="search"	resultMap="purchaseSelectMap">
+	<select  id="getPurchaseList"  parameterType="map"	resultMap="purchaseSelectMap">
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 	  					FROM		(	SELECT tran_no, prod_no, buyer_id, receiver_name,receiver_phone,tran_status_code
 											FROM transaction
-											<if test="buyer_id!= null">
 												<where>
 													buyer_id=#{buyerId}
 												</where>
-											</if>
 											ORDER BY tran_no ) inner_table
 						WHERE ROWNUM &lt;= #{search.endRowNum} )
 		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum} 

@@ -90,7 +90,7 @@
 	  					FROM		(	SELECT tran_no, prod_no, buyer_id, receiver_name,receiver_phone,tran_status_code
 											FROM transaction
 												<where>
-													buyer_id=#{buyerId}
+													buyer_id=#{userId}
 												</where>
 											ORDER BY tran_no ) inner_table
 						WHERE ROWNUM &lt;= #{search.endRowNum} )
